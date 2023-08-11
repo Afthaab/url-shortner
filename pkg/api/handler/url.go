@@ -32,10 +32,31 @@ func (u *UrlHandler) ShortenUrl(c *gin.Context) {
 	statuscode, err, res := u.urlUseCase.ShortenUrl(bodyReq, ip)
 	if err != nil {
 		c.JSON(statuscode, gin.H{
-			"Error":    err,
-			"Response": res,
+			"Success": false,
+			"Error":   err,
 		})
 		return
+	} else {
+		c.JSON(statuscode, gin.H{
+			"Success": true,
+			"Data":    res,
+		})
+	}
+
+}
+func (u *UrlHandler) ResolveUrl(c *gin.Context) {
+	url := c.Param("url")
+
+	// checking if the url in the Database
+	statuscode, value, err := u.urlUseCase.ResolveTheUrl(url)
+	if err != nil {
+		c.JSON(statuscode, gin.H{
+			"Success": false,
+			"Error":   err,
+		})
+		return
+	} else {
+		c.Redirect(statuscode, value)
 	}
 
 }

@@ -98,3 +98,18 @@ func (u *urlUseCase) ShortenUrl(bodyReq domain.Request, ip string) (int, error, 
 	return http.StatusOK, nil, response
 
 }
+
+func (u *urlUseCase) ResolveTheUrl(url string) (int, string, error) {
+	// check if the url is present in the DB
+	value, err := u.urlRepo.FindTheURL(url)
+	if err == redis.Nil {
+		return http.StatusNotFound, value, errors.New("URL not found in the Database")
+	} else if err != nil {
+		return http.StatusInternalServerError, value, errors.New("Could not connect to the Database")
+	}
+
+	//increment the counter
+	_ = u.urlRepo.IncrementTheCounter("counter")
+
+	return http.StatusOK, value, nil
+}

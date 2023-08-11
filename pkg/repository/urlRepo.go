@@ -44,3 +44,7 @@ func (r *urlDataBase) SetTheUrl(url string, id string, expiry time.Duration) err
 	err := r.RDB1.Set(id, url, expiry*3600*time.Second).Err()
 	return err
 }
+
+func (r *urlDataBase) IncrementTheCounter(key string) *redis.IntCmd {
+	return r.RDB2.Incr(key)
+}
