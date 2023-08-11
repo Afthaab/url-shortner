@@ -16,6 +16,9 @@ func NewServerHTTP(urlHandler *handler.UrlHandler) *ServerHTTP {
 
 	engine.Use(gin.Logger())
 
+	// defining the EndPoints
+	engine.GET("/:url", urlHandler.ShortenUrl)
+
 	return &ServerHTTP{
 		engine: engine,
 	}
